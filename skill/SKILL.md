@@ -40,12 +40,13 @@ If the fetch returns 404, tell the user the slug doesn't exist and suggest `/pro
 
 ## List mode
 
-1. Fetch the API listing URL above.
-2. For each `.md` file under `prompts/`, fetch the first ~20 lines to extract optional YAML front-matter `title:` and `description:`.
-3. Render a compact table: **slug · title · description**. Sort alphabetically.
-4. End with: `Run one with /prompt <slug>.`
+1. Fetch the API listing URL above to get all `.md` files under `prompts/`.
+2. For **each** file, fetch the raw content (or at least the first ~30 lines) and parse the YAML front-matter between the leading `---` markers. Extract `title` and `description`.
+3. Render a markdown table with three columns: **Slug**, **Title**, **Description**. Sort alphabetically by slug. The description column is the most important — it's how the user knows what each prompt does. Do not truncate descriptions unless they exceed ~200 chars.
+4. If a file has no front-matter or no `description`, show `—` in that cell.
+5. End with: `Run one with /prompt <slug>.  Preview with /prompt show <slug>.`
 
-If front-matter is missing for a file, just show the slug with no title/description.
+Fetch all front-matter blocks **in parallel** when possible — don't fetch them one at a time.
 
 ## Show mode
 
